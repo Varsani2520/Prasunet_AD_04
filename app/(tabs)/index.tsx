@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated } from 'react-native';
 
 const TicTacToe = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [isXNext, setIsXNext] = useState(true);
   const [winner, setWinner] = useState(null);
+  const [fadeAnim] = useState(new Animated.Value(1)); // Animation value
 
   const handlePress = (index: number) => {
     if (board[index] || winner) return;
@@ -14,6 +15,12 @@ const TicTacToe = () => {
     setBoard(newBoard);
     setIsXNext(!isXNext);
     calculateWinner(newBoard);
+
+    // Trigger animation
+    Animated.sequence([
+      Animated.timing(fadeAnim, { toValue: 0.3, duration: 200, useNativeDriver: true }),
+      Animated.timing(fadeAnim, { toValue: 1, duration: 200, useNativeDriver: true })
+    ]).start();
   };
 
   const calculateWinner = (board: string[]) => {
@@ -41,11 +48,18 @@ const TicTacToe = () => {
     }
   };
 
-  const renderSquare = (index: number) => (
-    <TouchableOpacity key={index} style={styles.square} onPress={() => handlePress(index)}>
-      <Text style={styles.squareText}>{board[index]}</Text>
-    </TouchableOpacity>
-  );
+  const renderSquare = (index: number) => {
+    let symbol = board[index];
+    let textColor = symbol === 'X' ? 'red' : 'blue';
+
+    return (
+      <TouchableOpacity key={index} style={styles.square} onPress={() => handlePress(index)}>
+        <Animated.Text style={[styles.squareText, { opacity: fadeAnim, color: textColor }]}>
+          {symbol}
+        </Animated.Text>
+      </TouchableOpacity>
+    );
+  };
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
@@ -61,7 +75,7 @@ const TicTacToe = () => {
       <View style={styles.board}>
         {board.map((_, index) => renderSquare(index))}
       </View>
-      {winner && (
+      {winner !== null && (
         <View style={styles.resultContainer}>
           <Text style={styles.resultText}>
             {winner === 'Draw' ? "It's a Draw!" : `Winner: ${winner}`}
