@@ -39,7 +39,7 @@ const TicTacToe = () => {
     for (let line of lines) {
       const [a, b, c] = line;
       if (board[a].value && board[a].value === board[b].value && board[a].value === board[c].value) {
-        setWinner(board[a].value);
+        setWinner(board[a].value === 'X' ? 'Player 1' : 'Player 2');
         highlightWinnerLine(line); // Highlight winning line
         return;
       }
@@ -61,7 +61,7 @@ const TicTacToe = () => {
 
   const renderSquare = (index) => {
     const { value, highlight } = board[index];
-    let textColor = highlight ? 'white' : (value === 'X' ? 'yellow' : 'white');
+    let textColor = highlight ? 'white' : (value === 'O' ? 'yellow' : 'white');
     let backgroundColor = highlight ? 'yellow' : 'transparent';
 
     return (
@@ -84,7 +84,7 @@ const TicTacToe = () => {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Tic Tac Toe</Text>
       </View>
-      <View style={[styles.board, { backgroundColor: 'red', borderRadius: 5 }]}>
+      <View style={[styles.board, { backgroundColor: 'red', borderRadius: 15 }]}>
         {board.map((_, index) => renderSquare(index))}
       </View>
       {winner !== null && (
@@ -116,8 +116,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   board: {
-    width: 306, // Adjusted to accommodate borders correctly
-    height: 304, // Adjusted to accommodate borders correctly
+    width: 304, 
+    height: 304, 
     flexDirection: 'row',
     flexWrap: 'wrap',
     borderWidth: 2,
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     height: 100,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: '#fff',
   },
   squareText: {
