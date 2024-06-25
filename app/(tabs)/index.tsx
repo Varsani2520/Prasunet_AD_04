@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Animated } from 'react-native';
 
 const TicTacToe = () => {
-  const [board, setBoard] = useState(Array(9).fill(null));
+  const initialBoard = Array(9).fill({ value: null, highlight: false });
+  const [board, setBoard] = useState(initialBoard);
   const [isXNext, setIsXNext] = useState(true);
   const [winner, setWinner] = useState(null);
   const [fadeAnim] = useState(new Animated.Value(1)); // Animation value
 
-  const handlePress = (index: number) => {
-    if (board[index] || winner) return;
+  const handlePress = (index) => {
+    if (board[index].value || winner) return;
 
     const newBoard = board.slice();
-    newBoard[index] = isXNext ? 'X' : 'O';
+    newBoard[index] = { value: isXNext ? 'X' : 'O', highlight: false };
     setBoard(newBoard);
     setIsXNext(!isXNext);
     calculateWinner(newBoard);
@@ -23,7 +24,7 @@ const TicTacToe = () => {
     ]).start();
   };
 
-  const calculateWinner = (board: string[]) => {
+  const calculateWinner = (board) => {
     const lines = [
       [0, 1, 2],
       [3, 4, 5],
@@ -37,32 +38,43 @@ const TicTacToe = () => {
 
     for (let line of lines) {
       const [a, b, c] = line;
-      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
-        setWinner(board[a]);
+      if (board[a].value && board[a].value === board[b].value && board[a].value === board[c].value) {
+        setWinner(board[a].value);
+        highlightWinnerLine(line); // Highlight winning line
         return;
       }
     }
 
-    if (!board.includes(null)) {
+    if (!board.some(square => square.value === null)) {
       setWinner('Draw');
     }
   };
 
-  const renderSquare = (index: number) => {
-    let symbol = board[index];
-    let textColor = symbol === 'X' ? 'red' : 'blue';
+  const highlightWinnerLine = (line) => {
+    // Modify the board state to highlight the winning line
+    const highlightedBoard = board.map((square, index) => ({
+      ...square,
+      highlight: line.includes(index),
+    }));
+    setBoard(highlightedBoard);
+  };
+
+  const renderSquare = (index) => {
+    const { value, highlight } = board[index];
+    let textColor = 'white';
+    let backgroundColor = highlight ? 'yellow' : 'transparent';
 
     return (
-      <TouchableOpacity key={index} style={styles.square} onPress={() => handlePress(index)}>
+      <TouchableOpacity key={index} style={[styles.square, { backgroundColor }]} onPress={() => handlePress(index)}>
         <Animated.Text style={[styles.squareText, { opacity: fadeAnim, color: textColor }]}>
-          {symbol}
+          {value}
         </Animated.Text>
       </TouchableOpacity>
     );
   };
 
   const resetGame = () => {
-    setBoard(Array(9).fill(null));
+    setBoard(initialBoard);
     setIsXNext(true);
     setWinner(null);
   };
@@ -72,7 +84,7 @@ const TicTacToe = () => {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Tic Tac Toe</Text>
       </View>
-      <View style={styles.board}>
+      <View style={[styles.board, { backgroundColor: 'red' ,borderRadius:'15px'}]}>
         {board.map((_, index) => renderSquare(index))}
       </View>
       {winner !== null && (
@@ -104,10 +116,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   board: {
-    width: 300,
-    height: 300,
+    width: 306, 
+    height: 306, 
     flexDirection: 'row',
     flexWrap: 'wrap',
+    borderWidth: 2,
+    borderColor: '#fff',
   },
   square: {
     width: 100,
@@ -115,7 +129,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#fff',
+    color:'white'
   },
   squareText: {
     fontSize: 32,
