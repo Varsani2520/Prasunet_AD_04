@@ -1,70 +1,128 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const TicTacToe = () => {
+  const [board, setBoard] = useState(Array(9).fill(null));
+  const [isXNext, setIsXNext] = useState(true);
+  const [winner, setWinner] = useState(null);
 
-export default function HomeScreen() {
-  return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+  const handlePress = (index: number) => {
+    if (board[index] || winner) return;
+
+    const newBoard = board.slice();
+    newBoard[index] = isXNext ? 'X' : 'O';
+    setBoard(newBoard);
+    setIsXNext(!isXNext);
+    calculateWinner(newBoard);
+  };
+
+  const calculateWinner = (board: string[]) => {
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (let line of lines) {
+      const [a, b, c] = line;
+      if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+        setWinner(board[a]);
+        return;
+      }
+    }
+
+    if (!board.includes(null)) {
+      setWinner('Draw');
+    }
+  };
+
+  const renderSquare = (index: number) => (
+    <TouchableOpacity key={index} style={styles.square} onPress={() => handlePress(index)}>
+      <Text style={styles.squareText}>{board[index]}</Text>
+    </TouchableOpacity>
   );
-}
+
+  const resetGame = () => {
+    setBoard(Array(9).fill(null));
+    setIsXNext(true);
+    setWinner(null);
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>Tic Tac Toe</Text>
+      </View>
+      <View style={styles.board}>
+        {board.map((_, index) => renderSquare(index))}
+      </View>
+      {winner && (
+        <View style={styles.resultContainer}>
+          <Text style={styles.resultText}>
+            {winner === 'Draw' ? "It's a Draw!" : `Winner: ${winner}`}
+          </Text>
+          <TouchableOpacity style={styles.resetButton} onPress={resetGame}>
+            <Text style={styles.resetButtonText}>Reset Game</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    gap: 8,
+    backgroundColor: '#f5f5f5',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  titleContainer: {
+    marginBottom: 20,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  board: {
+    width: 300,
+    height: 300,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  square: {
+    width: 100,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#000',
+  },
+  squareText: {
+    fontSize: 32,
+  },
+  resultContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  resultText: {
+    fontSize: 24,
+  },
+  resetButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#007bff',
+    borderRadius: 5,
+  },
+  resetButtonText: {
+    fontSize: 18,
+    color: '#fff',
   },
 });
+
+export default TicTacToe;
