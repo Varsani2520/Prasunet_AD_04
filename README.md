@@ -1,50 +1,75 @@
-# Welcome to your Expo app 👋
+# Prasunet_AD_04 | Tic_Tac_Toe_App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A Tic Tac Toe game application built with React Native, allowing two players to take turns placing their symbols (X or O) on a 3x3 grid. The objective is to form a horizontal, vertical, or diagonal line of three of their symbols to win the game. The app includes a reset option to start a new game.
 
-## Get started
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- **Two-Player Game:** Two players can take turns to place their symbols (X or O).
+- **3x3 Grid:** Classic Tic Tac Toe game board.
+- **Win Detection:** Automatically detects and announces the winner.
+- **Draw Detection:** Detects and announces a draw if no player wins.
+- **Reset Game:** Option to reset the game and start a new one.
 
-2. Start the app
+## Technologies Used
 
-   ```bash
-    npx expo start
-   ```
+- **React Native**: Framework for building native apps using React.
+- **React Hooks**: Functional components and state management.
+- **Styled Components**: For styling the app components.
+- **react-navigation**: Routing and navigation for React Native apps.
 
-In the output, you'll find options to open the app in a
+## Get Started 
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Prerequisites
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Ensure you have Node.js and npm installed on your development machine.
 
-## Get a fresh project
+### Installation
 
-When you're ready, run:
+1. Clone the repo
+   ```sh
+   git clone https://github.com/yourusername/Prasunet_AD_04.git
 
-```bash
-npm run reset-project
-```
+2. Navigate into the project directory
+    ```sh
+     cd Prasunet_AD_04
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+3. Install dependencies
+    ```sh
+    npm install
+    
+## Acknowledgements
 
-## Learn more
+- Inspired by various Tic Tac Toe game applications.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Authors
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- [@Varsani2520](https://www.github.com/Varsani2520)
 
-## Join the community
+## Getting Started
 
-Join our community of developers creating universal apps.
+### Usage
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+- **Start the Game:**
+  1. Open the app to see the 3x3 game board.
+
+- **Place a Symbol**
+  1. Tap on an empty cell to place your symbol (X or O) in that cell.
+
+- **Win the Game**
+  1. Form a horizontal, vertical, or diagonal line of three of your symbols to win the game.
+
+- **Draw the Game**
+  1. If all cells are filled and no player has won, the game is a draw.
+
+- **Reset the Game:**
+  1. Tap the reset button to clear the board and start a new game.
+
+## Videos
+
+https://github.com/user-attachments/assets/52e22675-952c-4654-b756-4b71d62a29ee
+
+
+
+
+  
